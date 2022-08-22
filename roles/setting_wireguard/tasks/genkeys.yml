@@ -1,0 +1,17 @@
+---
+# Generate wireguard keys
+- name: "Generate server private key"
+  ansible.builtin.shell: wg genkey
+  register: server_private_key
+
+- name: "Get server public key"
+  ansible.builtin.shell: echo {{ server_private_key.stdout }} | wg pubkey
+  register: server_public_key
+
+- name: "Generate  client private key"
+  ansible.builtin.shell: wg genkey
+  register: client_private_key
+
+- name: "Get client public key"
+  ansible.builtin.shell: echo {{ client_private_key.stdout }} | wg pubkey
+  register: client_public_key

@@ -1,0 +1,23 @@
+---
+
+- name: "Include generate keys"
+  ansible.builtin.import_tasks: genkeys.yml
+- name: "Setting server"
+  ansible.builtin.import_tasks: setting.yml
+- name: "Generate client config"
+  ansible.builtin.blockinfile:
+    path: clients/{{ inventory_hostname }}.conf
+    create: yes
+    block: |
+      [Interface]
+      PrivateKey = {{ client_private_key.stdout }}
+      Address = {{ client }}/32
+      DNS = 8.8.8.8
+
+      [Peer]
+      PublicKey = {{ server_public_key.stdout }}
+      AllowedIPs = 0.0.0.0/1, 128.0.0.0/1
+      Endpoint = {{ ansible_host }}:51820
+      PersistentKeepalive = 25
+  delegate_to: localhost
+  become: false

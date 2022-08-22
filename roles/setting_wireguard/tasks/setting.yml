@@ -1,0 +1,22 @@
+---
+# Settings wireguard for raspberry
+
+- name: "Add peer to server"
+  ansible.builtin.blockinfile:
+    path: /etc/wireguard/wg0.conf
+    create: yes
+    marker: "#{mark} config by ansible"
+    block: |
+      [Interface]
+      Address={{ server }}
+      PrivateKey={{ server_private_key.stdout }}
+      ListenPort=51820
+      [Peer]
+      AllowedIPs={{ client }}/32
+      PublicKey={{ client_public_key.stdout }}
+      PersistentKeepalive = 25
+
+- name: "Restart wireguard server"
+  ansible.builtin.service:
+    name: wg-quick@wg0
+    state: restarted

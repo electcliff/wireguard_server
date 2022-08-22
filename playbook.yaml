@@ -1,0 +1,12 @@
+- name: "Deploy wireguard server"
+  hosts: '{{ target }}'
+  become: true
+  become_method: sudo
+  roles:
+    - role: roles/install_wireguard
+      tags: install
+    - role: roles/setting_wireguard
+      tags: setting
+  vars:
+    server: 172.18.0.1
+    client: 172.18.0.2

@@ -1,0 +1,49 @@
+---
+- name: "install wireguard on Debian"
+  block:
+    - name: "Add wireguard repository Debian"
+      ansible.builtin.apt_repository:
+        repo: deb http://deb.debian.org/debian buster-backports main
+        state: present
+
+    - name: "Check core Debian"
+      command: "uname -r"
+      register: core
+      changed_when: False
+
+    - name: "Install wireguard Debian"
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      loop:
+        - wireguard
+        - wireguard-dkms
+        - wireguard-tools
+        - linux-headers-{{ core.stdout }}
+  when: ansible_distribution == "Debian"
+
+- name: "install wireguard on Ubuntu"
+  block:
+    - name: "Install wireguard Ubuntu"
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      loop:
+        - wireguard
+        - wireguard-tools
+  when: ansible_distribution == "Ubuntu"
+
+- name: "Add wireguard module"
+  community.general.modprobe:
+    name: wireguard
+
+- name: "Enable forwarding"
+  sysctl:
+    name: 'net.ipv4.ip_forward'
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
