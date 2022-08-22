@@ -1,0 +1,9 @@
+---
+# setting iptables
+- name: "Copy iptables script"
+  ansible.builtin.template:
+   src: iptables.j2
+   dest: /etc/network/if-pre-up.d/iptables
+   mode: 0740
+- name: "Apply iptebles rules"
+  ansible.builtin.shell: /etc/network/if-pre-up.d/iptables
