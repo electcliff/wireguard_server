@@ -12,7 +12,7 @@
       [Interface]
       PrivateKey = {{ client_private_key.stdout }}
       Address = {{ client }}/32
-      DNS = 213.157.50.130
+      DNS = 195.210.46.195
 
       [Peer]
       PublicKey = {{ server_public_key.stdout }}
