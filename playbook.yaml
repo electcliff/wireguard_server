@@ -3,6 +3,7 @@
   become: true
   become_method: sudo
   roles:
+    - role: roles/update
     - role: roles/iptables
       tags: iptables
     - role: roles/install_wireguard
