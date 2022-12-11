@@ -1,0 +1,5 @@
+---
+# Generate wireguard keys
+- name: "Generate server private key"
+  ansible.builtin.shell: openvpn --genkey
+  register: openvpn_key

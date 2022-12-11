@@ -1,5 +1,9 @@
 ---
 # setting iptables
+- name: "Install iptables"
+  ansible.builtin.apt:
+    name: iptables
+    state: present
 - name: "Copy iptables script"
   ansible.builtin.template:
    src: iptables.j2

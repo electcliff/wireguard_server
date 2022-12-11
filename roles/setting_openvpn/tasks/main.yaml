@@ -1,0 +1,22 @@
+---
+
+- name: "Include generate keys"
+  ansible.builtin.import_tasks: genkeys.yml
+- name: "Setting server"
+  ansible.builtin.import_tasks: setting.yml
+- name: "Generate client config"
+  ansible.builtin.blockinfile:
+    path: clients/{{ inventory_hostname }}.conf
+    create: yes
+    block: |
+      remote {{ ansible_host }} 51822
+      dev tun1
+      proto tcp-client
+      ifconfig {{ client }} {{ server }}
+      cipher AES-256-CBC
+      redirect-gateway autolocal
+      <secret>
+      {{ openvpn_key.stdout }}
+      </secret>
+  delegate_to: localhost
+  become: false

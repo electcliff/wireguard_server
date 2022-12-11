@@ -1,0 +1,15 @@
+- name: "Deploy openvpn server"
+  hosts: '{{ target }}'
+  become: true
+  become_method: sudo
+  roles:
+    - role: roles/update
+    - role: roles/iptables
+      tags: iptables
+    - role: roles/install_openvpn
+      tags: install_openvpn
+    - role: roles/setting_openvpn
+      tags: setting_openvpn
+  vars:
+    server: 172.18.0.1
+    client: 172.18.0.2

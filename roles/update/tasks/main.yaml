@@ -4,6 +4,9 @@
   ansible.builtin.apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
 - name: Upgrade all apt packages
   ansible.builtin.apt: upgrade=dist force_apt_get=yes
+  register: result
+
 - name: restarm host
   ansible.builtin.reboot:
     reboot_timeout: 3600
+  when: result.changed

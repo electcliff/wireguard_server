@@ -1,0 +1,24 @@
+---
+# Settings wireguard for raspberry
+
+- name: "Create server config"
+  ansible.builtin.blockinfile:
+    path: /etc/openvpn/openvpn.conf
+    create: yes
+    marker: "#{mark} config by ansible"
+    block: |
+      local {{ ansible_host }}
+      port 51822
+      proto tcp-server
+      cipher AES-256-CBC
+      dev tun240
+      ifconfig {{ server }} {{ client }}
+      <secret>
+      {{ openvpn_key.stdout }}
+      </secret>
+
+- name: "Restart openvpn server"
+  ansible.builtin.service:
+    name: openvpn@openvpn
+    state: restarted
+    enabled: yes
